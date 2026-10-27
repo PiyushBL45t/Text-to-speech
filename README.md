@@ -275,7 +275,7 @@ Confirm the Streamlit URL pasted into FreeWebToApk is **exactly** the deployed U
 
 ```
 .
-├── app.py                # The whole app (UI, preprocessing, OCR, TTS)
+├── main_version.py                # The whole app (UI, preprocessing, OCR, TTS)
 ├── requirements.txt      # Python dependencies
 ├── packages.txt          # System dependencies (Tesseract + language packs)
 └── README.md
