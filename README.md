@@ -6,6 +6,16 @@ Deployable to Streamlit Community Cloud and packageable as an Android APK via a 
 
 ---
 
+## 🔗 Live App
+
+**Try it now:** [https://text-to-speech-frc866vvgftbjamorcuipd.streamlit.app/](https://text-to-speech-frc866vvgftbjamorcuipd.streamlit.app/)
+
+Open the link on desktop or mobile to upload an image or take a photo with your camera, extract the text, and generate speech.
+
+**Android APK:** Create [Package as an Android APK](#-package-as-an-android-apk) — built for free with [FreeWebToApk](https://freewebtoapk.com/) from the deployed Streamlit URL.
+
+---
+
 ## ✨ Features
 
 - **Two input modes** — file upload *or* camera capture (`st.camera_input`)
@@ -135,33 +145,34 @@ The resulting URL (`https://<app-name>.streamlit.app`) works on desktop and mobi
 
 ## 📱 Package as an Android APK
 
-The recommended route is the open-source [`androidwrapper4streamlit`](https://github.com/luiscunhacsc/androidwrapper4streamlit) project — a small WebView shell (~5 MB) that loads your deployed Streamlit app full-screen. Supports Android 5.0+.
-
-> ⚠️ This produces a **WebView wrapper**, not a native app. The "camera" button uses the browser camera (front camera by default), not the native Android camera app. The app requires an internet connection. For a native camera experience with full-resolution images and offline OCR, a Kotlin rewrite (ML Kit + `TextToSpeech`) is required.
+The easiest route — **no Android Studio, no coding, no login required** — is to use **[FreeWebToApk](https://freewebtoapk.com/)**.
 
 ### Steps
 
-1. Clone the wrapper:
-   ```bash
-   git clone https://github.com/luiscunhacsc/androidwrapper4streamlit.git
-   ```
-2. Open the project in **Android Studio** and wait for Gradle sync
-3. In `MainActivity.java`, set your deployed URL:
-   ```java
-   private String streamlitUrl = "https://your-app-name.streamlit.app";
-   ```
-4. **Change the package name** (required — `com.example` is rejected by the Play Store):
-   - `app/build.gradle` → `namespace` and `applicationId`
-   - `MainActivity.java` → `package` declaration
-   - Rename the source folder to match
-5. Update app name in `res/values/strings.xml`
-6. Replace the icon via **right-click `res` → New → Image Asset** (512×512 PNG recommended)
-7. **Build → Build Bundle(s) / APK(s) → Build APK(s)**
-8. Find the APK at `app/build/outputs/apk/debug/app-debug.apk`
+1. **Deploy first.** Make sure your Streamlit app is live and reachable at its public URL:
+   [https://text-to-speech-frc866vvgftbjamorcuipd.streamlit.app/](https://text-to-speech-frc866vvgftbjamorcuipd.streamlit.app/)
+2. Go to **[https://freewebtoapk.com/](https://freewebtoapk.com/)**
+3. Paste your Streamlit URL into the input field
+4. Optionally set an app name and icon
+5. Click **Generate** — wait for the build to finish
+6. **Download the APK** and transfer it to your phone
+7. On the phone, enable **"Install from unknown sources"** and install the APK
 
-Install on your phone with **"Install from unknown sources"** enabled, then test camera capture and playback end-to-end.
+That's it. The resulting app opens your Streamlit UI full-screen in a WebView shell.
 
-For a Play Store release, use **Build → Generate Signed Bundle / APK** and follow the signing wizard.
+### Alternative wrappers
+
+- [`androidwrapper4streamlit`](https://github.com/luiscunhacsc/androidwrapper4streamlit) — open-source GitHub project, requires Android Studio to build
+- **Appy Pie** — free test APKs, paid for Play Store publishing
+- **WebToApp** — paid plans, tailored for Streamlit
+
+### ⚠️ Important caveats
+
+- **WebView wrapper, not native app.** The camera button uses the browser camera (front camera by default), not the native Android camera app. Image quality is compressed.
+- **Internet required.** The app loads your deployed Streamlit URL, so it needs connectivity.
+- **Full-screen web page.** No native navigation bar, no back-gesture handling beyond the browser defaults.
+
+For a native camera experience with full-resolution images and offline OCR, a Kotlin rewrite (ML Kit + `TextToSpeech`) is required — no build tool can bypass this.
 
 ---
 
@@ -254,6 +265,10 @@ OpenCV isn't installed. Run `pip install opencv-python-headless` (or check that 
 
 Some mobile browsers block camera access on plain HTTP or without user permission. Test over HTTPS (Streamlit Cloud serves HTTPS by default) and confirm the browser is prompting for camera permission. iOS Safari in particular may need a page reload after granting permission.
 
+### APK installs but shows a blank page / won't load
+
+Confirm the Streamlit URL pasted into FreeWebToApk is **exactly** the deployed URL (including trailing path) and that the app is awake (Streamlit Cloud sleeps after inactivity — visit the URL in a browser first to wake it, then reopen the APK).
+
 ---
 
 ## 📁 Project structure
@@ -298,10 +313,11 @@ Everything lives in `app.py` deliberately — it's small enough to keep the whol
 - **[gTTS](https://github.com/pndurette/gTTS)** — Google Translate TTS
 - **[edge-tts](https://github.com/rany2/edge-tts)** — Microsoft Edge neural voices
 - **[pyttsx3](https://github.com/nateshmbhat/pyttsx3)** — offline system TTS
-- **[androidwrapper4streamlit](https://github.com/luiscunhacsc/androidwrapper4streamlit)** — Android WebView shell
+- **[FreeWebToApk](https://freewebtoapk.com/)** — free website-to-APK conversion, no login required
+- **[androidwrapper4streamlit](https://github.com/luiscunhacsc/androidwrapper4streamlit)** — alternative open-source Android WebView shell
 
 ---
 
 ## 📄 License
 
-Tesseract itself is Apache-2.0 and the trained data follows its own licensing — check the [tessdata_best repo](https://github.com/tesseract-ocr/tessdata_best) for details.
+Add your preferred license here (MIT and Apache-2.0 are common for Streamlit apps). If you use the Tesseract language data or `tessdata_best` models, note that Tesseract itself is Apache-2.0 and the trained data follows its own licensing — check the [tessdata_best repo](https://github.com/tesseract-ocr/tessdata_best) for details.
